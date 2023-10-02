@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package errors;
+
+enum Code {
+  // defualt.
+  NONE = 0;
+    
+  // 10xxx authentication.
+  WRONG_PASSWORD = 10300;
+  INVALID_TOKEN = 10400;
+  MISSING_TOKEN = 10500;
+  TOKEN_EXPIRED = 10600;
+  FORBIDDEN = 10700;
+  TOKEN_BLOCKED = 10800;
+
+  // 11xxx request.
+  REQUEST_INSUFFICIENT = 11100;
+
+  // DataBase errors
+  ERR_DATA_EXISTED = 12100;
+  ERR_DATA_NOT_FOUND = 12200;
+
+  // User errors
+  NOT_SUPPORTED_DELETE_YOUR_SELF = 13100;  
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package roles;
+
+enum Roles {
+  ADMINISTRATOR = 0;
+  LEADER = 1;
+  USER = 2;  
+  // more roles here...
+}

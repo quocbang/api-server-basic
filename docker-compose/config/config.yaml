@@ -1,0 +1,33 @@
+postgres:
+  address: 172.20.0.3
+  port: 5432
+  name: demo_database
+  schema: public  
+  username: api_server_basic_user  
+  password: api_server_basic_password  
+redis:
+  address: 172.20.0.4:6379
+  password: api_server_basic_password
+  database: 1
+demo-account: # admin account define here just support for DEMO purpose.
+  - admin_01@gmail.com|admin_01_password
+  - admin_02@gmail.com|admin_02_password
+roles:
+  CREATE_ACCOUNT:
+    - ADMINISTRATOR
+  DELETE_ACCOUNTS:
+    - ADMINISTRATOR    
+
+  GET_TASKS:
+    - ADMINISTRATOR
+    - LEADER
+    - USER 
+  CREATE_TASKS:
+    - ADMINISTRATOR
+    - LEADER
+  UPDATE_TASK:
+    - ADMINISTRATOR
+    - LEADER
+  DELETE_TASKS:
+    - ADMINISTRATOR
+    - LEADER

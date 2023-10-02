@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package function;
+
+// FuntionOperationID is list of existing function in service.
+enum FunctionOperationID {
+  CREATE_ACCOUNT = 0;
+  DELETE_ACCOUNTS = 1;
+  
+  GET_TASKS = 2;
+  CREATE_TASKS = 3;
+  UPDATE_TASK = 4;  
+  DELETE_TASKS = 5;
+}

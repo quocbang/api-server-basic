@@ -1,0 +1,79 @@
+version: '3.3'
+
+services:
+  postgres:
+    container_name: postgres
+    networks:
+      drf_nw:
+        ipv4_address: 172.20.0.3
+    image: postgres:latest     
+    restart: always      
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: demo_database
+      POSTGRES_SCHEMAS: public
+      POSTGRES_USER: api_server_basic_user
+      POSTGRES_PASSWORD: api_server_basic_password
+    volumes:
+      - ./data/:/var/lib/postgresql/data
+
+  graphql-engine:
+    image: hasura/graphql-engine:latest
+    ports:
+      - "9999:8080"
+    networks:
+      drf_nw:
+        ipv4_address: 172.20.0.5
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://${DB_USER_NAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      ## uncomment next line to set an admin secret
+      HASURA_GRAPHQL_ENABLE_ALLOWLIST: "true"
+      HASURA_GRAPHQL_ADMIN_SECRET: quocbang
+      HASURA_GRAPHQL_ACCESS_KEY: 0123456789quocbang
+
+  redis:
+    container_name: redis
+    networks:
+      drf_nw:
+        ipv4_address: 172.20.0.4
+    image: redis:latest
+    restart: always
+    ports: 
+      - 6379:6379          
+    volumes:
+      - ./config/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./catche/:/data
+    command: redis-server /usr/local/etc/redis/redis.conf
+
+  api-server-basic:
+    container_name: api-server-basic    
+    image: 'bangquoc9/api-server-basic:$IMAGE_TAG'          
+    networks:
+      drf_nw:
+        ipv4_address: 172.20.0.2
+    environment:
+      - SECRET_KEY=$SECRET_KEY
+    depends_on:
+      - redis
+      - postgres 
+    ports:
+      - '8810:8810'
+    restart: always
+    command:
+      - /bin/sh
+      - -c
+      - |
+          ./server --host=172.20.0.2 --port=8810 --config=./config/config.yaml
+    volumes:      
+      - ./config/config.yaml:/root/config/config.yaml
+
+networks:
+  drf_nw:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.20.0.0/16"      
